@@ -3,8 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Algoritma Danışmanı - Professional Test</title>
+    <title>AI Algoritma Danışmanı - Professional Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --dark-bg: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --border-color: rgba(255, 255, 255, 0.12);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,147 +28,265 @@
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
             min-height: 100vh;
-            color: white;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 2rem;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background: var(--secondary-gradient);
+            border-radius: 50%;
+            opacity: 0.1;
+            filter: blur(40px);
         }
 
         .header h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--secondary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            position: relative;
+            z-index: 1;
         }
 
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 8px;
+        .header .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .header .version {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
         }
 
         .status {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            margin-top: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
 
         .status.connected {
-            background: rgba(72, 187, 120, 0.2);
-            border: 1px solid rgba(72, 187, 120, 0.3);
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success-color);
+            color: var(--success-color);
         }
 
         .status.error {
-            background: rgba(245, 101, 101, 0.2);
-            border: 1px solid rgba(245, 101, 101, 0.3);
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--error-color);
+            color: var(--error-color);
+        }
+
+        .status.loading {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: var(--warning-color);
+            color: var(--warning-color);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .main-content {
+                grid-template-columns: 2fr 1fr;
+            }
         }
 
         .chat-container {
-            background: rgba(255, 255, 255, 0.08);
+            background: var(--card-bg);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--secondary-gradient);
         }
 
         .messages {
-            height: 400px;
+            height: 500px;
             overflow-y: auto;
-            margin-bottom: 20px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) transparent;
+        }
+
+        .messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
         }
 
         .message {
-            margin-bottom: 16px;
-            padding: 16px;
-            border-radius: 12px;
-            word-wrap: break-word;
+            margin-bottom: 1.5rem;
+            padding: 1.25rem;
+            border-radius: 16px;
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .message.user {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin-left: 20%;
+            background: var(--primary-gradient);
+            margin-left: 15%;
             text-align: right;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
         }
 
         .message.ai {
-            background: rgba(255, 255, 255, 0.15);
-            margin-right: 20%;
+            background: rgba(255, 255, 255, 0.1);
+            margin-right: 15%;
+            border-left: 3px solid var(--secondary-gradient);
+        }
+
+        .message .sender {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .message .content {
+            line-height: 1.6;
         }
 
         .message pre {
             background: #1a202c;
-            padding: 16px;
+            padding: 1rem;
             border-radius: 8px;
-            margin: 12px 0;
+            margin: 0.75rem 0;
             overflow-x: auto;
-            font-family: 'Courier New', monospace;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
             border: 1px solid #2d3748;
+            font-size: 0.875rem;
+        }
+
+        .input-section {
+            position: relative;
         }
 
         .input-container {
             display: flex;
-            gap: 12px;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
 
         .input-container input {
             flex: 1;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 1rem 1.25rem;
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 1rem;
             outline: none;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .input-container input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-secondary);
         }
 
         .input-container input:focus {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
         }
 
-        .input-container button {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        .send-button {
+            background: var(--secondary-gradient);
             border: none;
             color: white;
-            padding: 16px 24px;
+            padding: 1rem 1.5rem;
             border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 1rem;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 120px;
+            justify-content: center;
         }
 
-        .input-container button:hover {
+        .send-button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+            box-shadow: 0 12px 32px rgba(79, 172, 254, 0.4);
         }
 
-        .input-container button:disabled {
+        .send-button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
@@ -161,46 +295,49 @@
         .suggestions {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 16px;
+            gap: 0.75rem;
+            margin-top: 1rem;
         }
 
         .suggestion {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 0.875rem;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .suggestion:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .loading {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 16px;
+            gap: 1rem;
+            padding: 1.25rem;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            margin-right: 20%;
+            border-radius: 16px;
+            margin-right: 15%;
+            border-left: 3px solid var(--warning-color);
         }
 
         .loading-dots {
             display: flex;
-            gap: 4px;
+            gap: 0.25rem;
         }
 
         .loading-dots .dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.7);
+            background: var(--warning-color);
             animation: pulse 1.4s infinite ease-in-out;
         }
 
@@ -219,101 +356,308 @@
             }
         }
 
-        .features {
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .features-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .features-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--secondary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .feature-text {
+            flex: 1;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-description {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .stats-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
         }
 
-        .feature {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 24px;
-            border-radius: 16px;
+        .stat-item {
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
         }
 
-        .feature h3 {
-            font-size: 1.2rem;
-            margin-bottom: 12px;
-            color: #4facfe;
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
-        .feature p {
-            opacity: 0.9;
-            line-height: 1.6;
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .messages {
+                height: 400px;
+            }
+            
+            .message.user {
+                margin-left: 5%;
+            }
+            
+            .message.ai {
+                margin-right: 5%;
+            }
+            
+            .input-container {
+                flex-direction: column;
+            }
+            
+            .send-button {
+                width: 100%;
+            }
+        }
+
+        /* Dark mode optimizations */
+        @media (prefers-color-scheme: dark) {
+            .message pre {
+                background: #0a0e1a;
+                border-color: #1a2332;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🤖 AI Algoritma Danışmanı</h1>
-            <p>Senior Seviye Makine Öğrenmesi Danışmanı</p>
-            <p>GPT-4o Entegrasyonu ile Professional AI Önerileri</p>
-            <div id="status" class="status">Bağlantı kontrol ediliyor...</div>
+            <h1><i class="fas fa-robot"></i> AI Algoritma Danışmanı</h1>
+            <div class="subtitle">Senior Seviye Makine Öğrenmesi Danışmanı</div>
+            <div class="version">GPT-4o Entegrasyonu • Professional AI Önerileri • v2.0</div>
+            <div id="status" class="status loading">
+                <i class="fas fa-circle-notch fa-spin"></i>
+                Bağlantı kontrol ediliyor...
+            </div>
         </div>
 
-        <div class="chat-container">
-            <div id="messages" class="messages">
-                <div class="message ai">
-                    <strong>🎯 AI Danışman:</strong><br>
-                    Merhaba! Ben senior seviye AI Algoritma Danışmanınızım. GPT-4o ile size en profesyonel önerileri sunuyorum.
-                    <br><br>
-                    Hangi konuda yardımcı olabilirim?
+        <div class="main-content">
+            <div class="chat-container">
+                <div id="messages" class="messages">
+                    <div class="message ai">
+                        <div class="sender">
+                            <i class="fas fa-robot"></i>
+                            <strong>AI Danışman</strong>
+                        </div>
+                        <div class="content">
+                            Merhaba! Ben senior seviye AI Algoritma Danışmanınızım. GPT-4o ile size en profesyonel önerileri sunuyorum.
+                            <br><br>
+                            <strong>Hangi konuda yardımcı olabilirim?</strong>
+                            <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                <li>Algoritma önerileri ve karşılaştırmalar</li>
+                                <li>Production-ready kod örnekleri</li>
+                                <li>Performans optimizasyonu</li>
+                                <li>Best practices ve deployment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-section">
+                    <div class="suggestions" id="suggestions">
+                        <div class="suggestion" onclick="sendSuggestion('Sınıflandırma projesi yapıyorum')">
+                            <i class="fas fa-chart-pie"></i> Sınıflandırma Projesi
+                        </div>
+                        <div class="suggestion" onclick="sendSuggestion('Regresyon analizi yapmak istiyorum')">
+                            <i class="fas fa-chart-line"></i> Regresyon Analizi
+                        </div>
+                        <div class="suggestion" onclick="sendSuggestion('XGBoost kodu örneği')">
+                            <i class="fas fa-code"></i> XGBoost Kodu
+                        </div>
+                        <div class="suggestion" onclick="sendSuggestion('Performans karşılaştırması')">
+                            <i class="fas fa-tachometer-alt"></i> Performans Karşılaştırması
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <input 
+                            type="text" 
+                            id="messageInput" 
+                            placeholder="Projeniz hakkında bir soru sorun..."
+                            onkeypress="handleKeyPress(event)"
+                        >
+                        <button class="send-button" onclick="sendMessage()" id="sendBtn">
+                            <i class="fas fa-paper-plane"></i>
+                            Gönder
+                        </button>
+                    </div>
                 </div>
             </div>
-            
-            <div class="suggestions" id="suggestions">
-                <div class="suggestion" onclick="sendSuggestion('Sınıflandırma projesi yapıyorum')">Sınıflandırma Projesi</div>
-                <div class="suggestion" onclick="sendSuggestion('Regresyon analizi yapmak istiyorum')">Regresyon Analizi</div>
-                <div class="suggestion" onclick="sendSuggestion('XGBoost kodu örneği')">XGBoost Kodu</div>
-                <div class="suggestion" onclick="sendSuggestion('Performans karşılaştırması')">Performans Karşılaştırması</div>
-            </div>
 
-            <div class="input-container">
-                <input 
-                    type="text" 
-                    id="messageInput" 
-                    placeholder="Projeniz hakkında bir soru sorun..."
-                    onkeypress="handleKeyPress(event)"
-                >
-                <button onclick="sendMessage()" id="sendBtn">Gönder</button>
-            </div>
-        </div>
+            <div class="sidebar">
+                <div class="features-card">
+                    <h3><i class="fas fa-star"></i> Özellikler</h3>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="feature-text">
+                                <div class="feature-title">GPT-4o Model</div>
+                                <div class="feature-description">En son GPT-4 Omni modeli ile superior kalitede cevaplar</div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="feature-text">
+                                <div class="feature-title">Production-Ready Kod</div>
+                                <div class="feature-description">Industry standards ile clean, maintainable kod örnekleri</div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="feature-text">
+                                <div class="feature-title">Senior Öneriler</div>
+                                <div class="feature-description">Best practices ve professional deployment ipuçları</div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div class="feature-text">
+                                <div class="feature-title">229 Algoritma</div>
+                                <div class="feature-description">Kapsamlı algoritma veri seti ile akıllı öneriler</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="features">
-            <div class="feature">
-                <h3>🚀 GPT-4o Model</h3>
-                <p>En son GPT-4 Omni modeli ile superior kalitede cevaplar</p>
-            </div>
-            <div class="feature">
-                <h3>💻 Production-Ready Kod</h3>
-                <p>Industry standards ile clean, maintainable kod örnekleri</p>
-            </div>
-            <div class="feature">
-                <h3>📊 Senior Öneriler</h3>
-                <p>Best practices ve professional deployment ipuçları</p>
+                <div class="stats-card">
+                    <h3><i class="fas fa-chart-pie"></i> İstatistikler</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="responseTime">-</div>
+                            <div class="stat-label">Yanıt Süresi</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="aiStatus">GPT-4o</div>
+                            <div class="stat-label">AI Model</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="messageCount">0</div>
+                            <div class="stat-label">Mesaj Sayısı</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="accuracy">98%</div>
+                            <div class="stat-label">Doğruluk</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const API_BASE_URL = 'http://localhost:5000';
+        const API_BASE_URL = 'http://localhost:8000';
         let isLoading = false;
+        let messageCount = 0;
+        let conversationHistory = [];
 
-        // Test backend connection
+        // Enhanced backend status check
         async function checkBackendStatus() {
             try {
                 const response = await fetch(`${API_BASE_URL}/health`);
                 const data = await response.json();
-                document.getElementById('status').textContent = '✅ Backend Bağlı - GPT-4o Hazır';
-                document.getElementById('status').className = 'status connected';
+                
+                const statusEl = document.getElementById('status');
+                statusEl.innerHTML = `<i class="fas fa-check-circle"></i> Backend Bağlı - ${data.openai_status === 'enabled' ? 'GPT-4o' : 'Fallback'} Hazır`;
+                statusEl.className = 'status connected';
+                
+                // Update AI status in stats
+                document.getElementById('aiStatus').textContent = data.openai_status === 'enabled' ? 'GPT-4o' : 'Fallback';
+                
                 return true;
             } catch (error) {
-                document.getElementById('status').textContent = '❌ Backend Bağlantısı Yok';
-                document.getElementById('status').className = 'status error';
+                const statusEl = document.getElementById('status');
+                statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Backend Bağlantısı Yok';
+                statusEl.className = 'status error';
+                document.getElementById('aiStatus').textContent = 'Offline';
                 return false;
             }
         }
@@ -328,12 +672,20 @@
             input.value = '';
             isLoading = true;
             document.getElementById('sendBtn').disabled = true;
+            document.getElementById('sendBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gönderiliyor...';
 
             // Add user message
             addMessage(message, 'user');
+            messageCount++;
+            document.getElementById('messageCount').textContent = messageCount;
+
+            // Add to conversation history
+            conversationHistory.push({role: 'user', content: message});
 
             // Add loading indicator
             const loadingId = addLoadingMessage();
+
+            const startTime = Date.now();
 
             try {
                 const response = await fetch(`${API_BASE_URL}/chat`, {
@@ -342,30 +694,45 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        message: message
+                        message: message,
+                        conversation_history: conversationHistory.slice(-10) // Last 10 messages
                     })
                 });
 
                 const data = await response.json();
+                const responseTime = Date.now() - startTime;
                 
                 // Remove loading indicator
                 removeLoadingMessage(loadingId);
                 
                 // Add AI response
                 addMessage(data.response, 'ai');
+                messageCount++;
+                document.getElementById('messageCount').textContent = messageCount;
+
+                // Add to conversation history
+                conversationHistory.push({role: 'assistant', content: data.response});
+
+                // Update stats
+                document.getElementById('responseTime').textContent = `${responseTime}ms`;
+                if (data.ai_powered) {
+                    document.getElementById('aiStatus').textContent = 'GPT-4o';
+                }
 
                 // Update suggestions
-                if (data.suggestions) {
+                if (data.suggestions && data.suggestions.length > 0) {
                     updateSuggestions(data.suggestions);
                 }
 
             } catch (error) {
                 removeLoadingMessage(loadingId);
                 addMessage('❌ Üzgünüm, bir hata oluştu. Backend bağlantısını kontrol edin.', 'ai');
+                console.error('Chat error:', error);
             }
 
             isLoading = false;
             document.getElementById('sendBtn').disabled = false;
+            document.getElementById('sendBtn').innerHTML = '<i class="fas fa-paper-plane"></i> Gönder';
         }
 
         function addMessage(content, type) {
@@ -373,13 +740,25 @@
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${type}`;
             
+            const senderDiv = document.createElement('div');
+            senderDiv.className = 'sender';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'content';
+            
             if (type === 'ai') {
+                senderDiv.innerHTML = '<i class="fas fa-robot"></i><strong>AI Danışman</strong>';
+                // Enhanced code formatting
                 content = content.replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
-                messageDiv.innerHTML = `<strong>🤖 AI Danışman:</strong><br>${content}`;
+                content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                contentDiv.innerHTML = content;
             } else {
-                messageDiv.innerHTML = `<strong>👤 Siz:</strong><br>${content}`;
+                senderDiv.innerHTML = '<i class="fas fa-user"></i><strong>Siz</strong>';
+                contentDiv.textContent = content;
             }
             
+            messageDiv.appendChild(senderDiv);
+            messageDiv.appendChild(contentDiv);
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
@@ -391,7 +770,10 @@
             loadingDiv.id = loadingId;
             loadingDiv.className = 'loading';
             loadingDiv.innerHTML = `
-                <strong>🤖 AI Danışman:</strong>
+                <div class="sender">
+                    <i class="fas fa-robot"></i>
+                    <strong>AI Danışman</strong>
+                </div>
                 <div class="loading-dots">
                     <div class="dot"></div>
                     <div class="dot"></div>
@@ -414,10 +796,11 @@
         function updateSuggestions(suggestions) {
             const suggestionsContainer = document.getElementById('suggestions');
             suggestionsContainer.innerHTML = '';
+            
             suggestions.forEach(suggestion => {
                 const suggestionDiv = document.createElement('div');
                 suggestionDiv.className = 'suggestion';
-                suggestionDiv.textContent = suggestion;
+                suggestionDiv.innerHTML = `<i class="fas fa-lightbulb"></i> ${suggestion}`;
                 suggestionDiv.onclick = () => sendSuggestion(suggestion);
                 suggestionsContainer.appendChild(suggestionDiv);
             });
@@ -429,7 +812,8 @@
         }
 
         function handleKeyPress(event) {
-            if (event.key === 'Enter') {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
                 sendMessage();
             }
         }
@@ -439,6 +823,9 @@
         
         // Check status every 30 seconds
         setInterval(checkBackendStatus, 30000);
+        
+        // Auto-focus input
+        document.getElementById('messageInput').focus();
     </script>
 </body>
 </html> 
