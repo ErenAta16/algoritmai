@@ -1,0 +1,241 @@
+Algoritma Adı,Öğrenme Türü,Kullanım Alanı,Karmaşıklık Düzeyi,Model Yapısı,Aşırı Öğrenme Eğilimi,Katman Tipi,Veri Tipi,Donanım Gerkesinimleri,Veri Büyüklüğü ,FineTune Gereksinimi,Popülerlik
+Perceptron,sl,cl,comp1,li,of1,sl2,nd,0.3,MB,ft1,p1
+Çok Katmanlı Algılayıcı (MLP),sl,cl-re,comp3,nm,of3,ml,nd,0.5,MB-GB,ft2,p3
+Konvolüsyonel Sinir Ağı (CNN),sl,ip-cl,comp4,nm,of4,ml,id,0.5,GB-TB,ft2,p3
+sl2rarlayan Sinir Ağı (RNN),sl,ts-np,comp4,nm,of4,ml,tsd-td,0.5,GB,ft2,p3
+LSTM (Uzun Kısa Süreli Bellek),sl,ts-np,comp4,nm,of4,ml,tsd-td,0.7,GB,ft2,p3
+GRU (Gated Recurrent Unit),sl,ts-np,comp4,nm,of4,ml,tsd-td,0.7,GB,ft2,p3
+Otonom Kodlayıcı (Autoencoder),ul,dr,comp4,nm,of4,ml,nd-id,0.5,MB-GB,ft2,p1
+Derin Otonom Kodlayıcı (Deep Autoencoder),ul,dr,comp5,nm,of5,dl,nd-id,0.7,GB,ft2,p1
+Generative Adversarial Network (GAN),ul,dap,comp5,nm,of5,dl,id,0.7,GB-TB,ft2,p3
+Variational Autoencoder (VAE),ul,dap,comp4,pb,of4,dl,nd-id,0.7,GB,ft2,p2
+Conditional GAN (cGAN),ul,dap,comp5,nm,of5,dl,id,0.7,GB,ft2,p2
+CycleGAN,ul,dap,comp5,nm,of5,dl,id,0.7,GB-TB,ft2,p3
+StyleGAN,ul,dap,comp5,nm,of5,dl,id,0.7,GB-TB,ft2,p3
+Transformer,sl,np,comp4,nm,of4,dl,td-id,1,GB-TB,ft3,p3
+Vision Transformer (ViT),sl,ip,comp4,nm,of4,dl,id,0.7,GB-TB,ft3,p3
+Capsule Networks (CapsNet),sl,ip,comp4,nm,of4,ml,id,0.7,GB,ft2,p2
+Self-Organizing Map (SOM),ul,vis-dre,comp2,db,of2,sl2,nd,0.3,MB,ft1,p1
+Radial Basis Function (RBF),sl,cl-re,comp2,cb,of2,sl2,nd,0,MB,ft1,p2
+Extreme Learning Machine (ELM),sl,cl-re,comp2,li,of2,sl2,nd,0.3,MB,ft1,p2
+Deep Belief Network (DBN),ul,fe,comp4,nm,of4,dl,nd,1,GB,ft2,p1
+Hopfield Ağı,sl,cl,comp2,nm,of2,sl2,nd,0.3,MB,ft1,p2
+Fuzzy Neural Network (FNN),sl,cl-re,comp2,rb,of2,ml,nd,0.3,MB,ft1,p2
+Spiking Neural Network (SNN),ul,ts-np,comp4,nm,of4,ml,id-tsd,0.7,MB-GB,ft2,p2
+Liquid State Machine (LSM),ul,ts,comp4,dy,of4,ml,tsd,0.3,MB,ft1,p1
+Neural Turing Machine (NTM),ul,dr,comp4,nm,of4,dl,nd-td,1,GB,ft3,p2
+Attention Mechanism,sl,np-ip,comp4,nm,of4,ml,td-id,0.5,MB-GB,ft2,p3
+Neural Architecture Search (NAS),sl,mol,comp4,ans,of4,dl,nd-id,0.7,GB-TB,ft3,p2
+Multi-Layer Perceptron with Dropout,sl,cl-re,comp3,nm,of3,ml,nd ,0.5,MB-GB,ft2,p2
+Dueling DQN,rl,g,comp4,nm,of4,ml,nd,0.5,MB-GB,ft2,p2
+Hindsight Experience Replay (HER),rl,g,comp4,dy,of4,ml,nd,0.5,MB-GB,ft2,p1
+Multi-Agent Reinforcement Learning (MARL),rl,g,comp4,dy,of4,ml,nd,0.7,MB,ft2,p2
+Federated Learning,ssl ,se-ed,comp3,ans,of3,ml,nd,0.7,MB-GB,ft3,p2
+Transfer Learning,ssl ,mol,comp3,ans,of3,ml,id-td,0.5,MB-GB,ft3,p3
+Zero-Shot Learning,ssl ,cl,comp3,pb,of3,ml,id-td,0.7,GB,ft3,p1
+One-Shot Learning,ssl ,cl,comp3,pb,of3,ml,id-td,0.7,GB,ft3,p2
+Multi-Task Learning,ssl ,cl-re,comp3,ans,of3,ml,nd-id,0.5,MB-GB,ft2,p2
+Self-Supervised Learning,ssl ,dr,comp3,nm,of3,ml,id-td,0.5,GB,ft3,p3
+Contrastive Learning,ssl ,fe,comp3,nm,of3,ml,id-td,0.7,GB-TB,ft3,p2
+Metric Learning,ssl ,cl,comp2,vd,of2,ml,nd-id,0.5,MB-GB,ft2,p3
+Graph Neural Networks (GNN),sl, grd,comp4,nm,of4,gl,id,0.5,MB-GB,ft2,p1
+Attention-based Neural Networks,sl,np- ip,comp4,nm,of4,dl,td-id,0.7,GB,ft3,p1
+Neural Machine Translation (NMT),sl,np,comp4,nm,of4,dl,td,0.7,GB-TB,ft3,p3
+Image Captioning,sl,ip,comp4,nm,of4,dl,id-td,0.7,GB-TB,ft3,p2
+Video Classification,sl,ip,comp4,nm,of4,dl,tsd-id,0.7,GB-TB,ft3,p2
+Speech Recognition,sl,so,comp4,nm,of4,dl,ad,0.7,GB-TB,ft3,p3
+Emotion Recognition,sl,so-ip,comp4,nm,of4,dl,id-ad,0.7,GB,ft3,p2
+Anomaly Detection,ul,dr,comp4,nm,of4,sl2-ml,nd-id,0.3,MB-GB,ft2,p3
+Time Series Forecasting,sl,ts,comp3,dy,of3,sl2-ml,tsd,0.3,MB-GB,ft2,p3
+Reinforcement Learning with Function Approximation,rl,g,comp4,dy,of4,dl,nd,0.7,GB,ft3,p2
+Hierarchical Reinforcement Learning,rl,g,comp4,dy,of4,hl,nd,0.7,GB,ft3,p2
+Curriculum Learning,rl,g,comp3,dy,of3,dl,nd,0.7,GB,ft2,p1
+Meta-Learning,ssl ,mol,comp3,dy,of3,dl,nd,0.7,GB,ft2,p2
+Adversarial Training,sl,cl,comp5,nm,of5,dl,nd-id,0.7,GB-TB,ft3,p2
+Semi-Supervised Learning,ssl ,cl,comp3,ans,of3,dl,nd-id,0.7,GB,ft2,p1
+Active Learning,ssl ,cl,comp3,ans,of3,sl2-ml,nd,0.3,MB-GB,ft2,p2
+Knowledge Distillation,ssl ,mol,comp3,ans,of3,dl,nd-id,0.3,MB-GB,ft2,p2
+Ensemble Learning,sl,cl-re,comp3,ans,of3,sl2-ml,nd-id,0.3,MB-GB,ft2,p3
+K-Means,ul,cl-dre-fe,comp1,cb,of2,nl,nd-cd,0,MB-GB,ft1,p5
+K-Medoids (PAM),ul,cl-dre,comp2,cb,of2,nl,nd-cd,0.3,MB-GB,ft1,p3
+Mini-Batch K-Means,ul,cl-dre-ts,comp1,cb,of2,nl,nd,0,GB-TB,ft1,p4
+DBSCAN,ul,cl-ip-ts,comp2,db,of1,nl,nd-cd-nod,0.3,GB,ft2,p5
+OPTICS,ul,cl-ts,comp3,db,of1,nl,nd-nod,0.5,GB,ft2,p4
+HDBSCAN,ul,cl-ts-ip,comp4,db,of1,hl,nd-cd-nod,0.5,GB,ft2,p5
+Mean Shift,ul,cl-ip-dre,comp3,db,of2,nl,nd,0.5,MB-GB,ft2,p4
+Gaussian Mixture Models (GMM),ul,cl-re-dr-dap,comp3,pb,of3,bl,nd,0.5,MB-GB,ft2,p4
+Fuzzy C-Means (FCM),ul,cl-dre,comp3,cb,of3,nl,nd,0.5,MB-GB,ft2,p3
+Agglomerative Hierarchical Clustering,ul,cl-vis-dre,comp3,tre,of2,hl,nd-cd,0.5,MB-GB,ft1,p4
+Divisive Hierarchical Clustering,ul,cl-vis-dre,comp4,tre,of2,hl,nd-cd,0.5,MB-GB,ft1,p2
+Birch,ul,cl-ts,comp2,tre,of2,hl,nd,0,GB-TB,ft2,p3
+Spectral Clustering,ul,cl-dre-fe,comp4,li,of3,ml,nd,0.7,MB-GB,ft2,p4
+Self-Organizing Maps (SOM),ul,cl-vis-dre-ip,comp4,nm,of3,sl2,nd-id,0.7,MB-GB,ft3,p3
+Affinity Propagation,ul,cl-dre,comp3,vd,of2,nl,nd,0.5,MB-GB,ft2,p3
+COP-KMeans,ssl,cl,comp3,cb,of2,nl,nd- cd,0.5,MB-GB,ft2,p2
+Constrained Spectral Clustering,ssl,cl,comp4,li,of3,ml,nd,0.7,MB-GB,ft2,p2
+Density Peak Clustering,ul,cl-vis,comp3,db,of2,nl,nd,0.5,MB-GB,ft2,p2
+t-SNE + Clustering,ul,vis-dre-fe,comp5,nli,of4,ml,nd-id-td,1,MB-GB,ft3,p5
+UMAP + Clustering,ul,vis-dre-fe,comp5,nli,of4,ml,nd-id-td,1,MB-GB,ft3,p5
+Deep Embedded Clustering (DEC),ul,dre-ip-np,comp5,nm,of5,dl,nd-id-td,1,GB,ft3,p4
+Variational Deep Embedding (VaDE),ul,dre-dr-dap,comp5,nm,of5,dl- bl,nd-id-td,1,GB,ft3,p3
+Autoencoder + Clustering,ul,dr-dre-fe,comp5,nm,of5,dl,nd-id-td,1,GB-TB,ft3,p5
+Graph-Based Clustering,ul,cl-se-g-vis,comp4,sb,of3,gl,nd-cd-td,0.7,GB,ft2,p3
+Ensemble Clustering,ul,cl,comp4,ans,of3,ml,nd-cd,0.7,GB,ft2,p4
+Subspace Clustering,ul,cl-dre,comp4,li,of3,ml,nd,0.5,GB,ft2,p2
+Biclustering,ul,cl-ts-np,comp4,li,of3,ml,nd-td,0.5,MB-GB,ft2,p2
+Co-clustering,ul,cl-ts-np,comp4,li,of3,ml,nd-td,0.5,MB-GB,ft2,p2
+Model-Based Clustering,ul,cl-re,comp4,pb,of3,bl,nd,0.5,MB-GB,ft2,p3
+Evolutionary Clustering,ul,cl-ts-g,comp5,dy,of4,ml,nd-tsd,0.7,MB-GB,ft3,p2
+Online Clustering,ul,ts-cl,comp3,dy,of2,nl,nd-tsd,0.3,TB,ft3,p3
+Streaming Clustering,ul,ts-cl,comp4,dy,of2,nl,nd-tsd,0.3,TB,ft3,p3
+Time Series Clustering,ul,ts,comp3,li,of3,ml,tsd,0.5,GB,ft2,p4
+Text Clustering,ul,np-cl,comp4,li,of4,ml,td,0.7,GB-TB,ft3,p5
+Image Clustering,ul,ip-cl-fe,comp5,nli,of5,dl,id,1,GB-TB,ft3,p5
+Functional Data Clustering,ul,ts-re,comp4,li,of3,ml,tsd,0.5,MB-GB,ft2,p2
+Kernel K-Means,ul,cl-dre,comp3,nli,of3,ml,nd,0.5,MB-GB,ft2,p3
+Soft K-Means,ul,cl,comp2,cb,of3,nl,nd,0.5,MB-GB,ft2,p2
+Possibilistic C-Means (PCM),ul,cl,comp3,cb,of3,nl,nd,0.5,MB-GB,ft2,p2
+Robust Clustering Algorithms,ul,cl-se,comp4,rb,of2,ml,nd-nod,0.7,MB-GB,ft2,p2
+Logistic Regression,sl   ,cl-re-fe,comp2,li,of2,sl2,nd-cd,0,MB-GB,ft1,p3
+Linear Discriminant Analysis (LDA),sl   ,cl-dre-fe,comp2,li-pb,of2,sl2,nd-cd,0,MB-GB,ft1,p3
+Ridge Classifier,sl   ,cl-re,comp2,li,of2,sl2,nd-cd,0,MB-GB,ft1,p2
+Passive-Aggressive Classifier,sl   ,cl-np,comp3,li,of3,sl2,nd-cd,0.3,GB,ft2,p2
+Perceptron,sl   ,cl-np-ts,comp3,li-nm,of4,sl2,nd-cd,0.3,GB,ft2,p3
+Linear Support Vector Machine (SVM)  ,sl   ,cl-re-fe-se,comp3,li-sb,of3,sl2,nd-cd,0.3,GB,ft2,p3
+Nearest Centroid Classifier,sl   ,cl,comp2,cb-vd,of2,sl2,nd-cd,0,MB-GB,ft1,p1
+Decision Tree (CART - Classification and Regression Tree),sl   ,cl-re-fe,comp3,tre,of4,sl2,nd-cd,0.3,GB,ft2,p3
+"C4,5",sl   ,cl,comp3,tre,of4,sl2,nd-cd,0.3,GB,ft2,p1
+"C5,0",sl   ,cl,comp3,tre,of4,sl2,nd-cd,0.3,GB,ft2,p1
+ID3 (Iterative Dichotomiser 3),sl   ,cl,comp3,tre,of4,sl2,nd-cd,0.3,MB-GB,ft2,p1
+CHAID (Chi-squared Automatic Interaction Detection),sl   ,cl,comp3,tre,of3,sl2,nd-cd,0.3,GB,ft2,p1
+Random Forest,sl   ,cl-re-fe-se,comp4,ans-tre,of3,hl,nd-cd,0.5,GB-TB,ft2,p3
+Extra Trees (Extremely Randomized Trees),sl   ,cl-re-fe,comp4,ans-tre,of3,hl,nd-cd,0.5,GB-TB,ft2,p3
+Rotation Forest,sl   ,cl-re,comp4,ans-tre,of3,hl,nd-cd,0.5,GB-TB,ft3,p1
+Gradient Boosted Trees (GBTs),sl   ,cl-re,comp4,ans-tre,of3,hl,nd-cd,0.5,GB-TB,ft3,p3
+XGBoost,sl   ,cl-re-mol,comp4,ans-tre,of4,hl,nd-cd,0.7,GB-TB,ft3,p3
+LightGBM,sl   ,cl-re-mol,comp4,ans-tre,of3,hl,nd-cd,0.5,GB-TB,ft3,p3
+CatBoost,sl   ,cl-re-mol,comp4,ans-tre,of3,hl,nd-cd,0.7,GB-TB,ft3,p3
+Oblivious Decision Trees,sl   ,cl,comp3,tre,of3,sl2,nd-cd,0.3,GB,ft2,p1
+Histogram-Based Gradient Boosting,sl   ,cl-re,comp4,ans-tre,of3,hl,nd-cd,0.5,GB-TB,ft3,p2
+"Kernel SVM (RBF, Polynomial, Sigmoid)",sl   ,cl-re-fe-ip-se,comp4,nli-sb,of4,sl2,nd-cd,0.7,GB,ft3,p3
+Least Squares SVM (LS-SVM),sl   ,cl-re,comp4,li-sb,of4,sl2,nd-cd,0.5,GB,ft3,p1
+ν-SVM,sl   ,cl,comp4,li-sb,of4,sl2,nd-cd,0.5,GB,ft3,p1
+One-Class SVM (Anomaliler için),sl   ,se-cl,comp4,sb-db,of4,sl2,nd-cd,0.3,GB,ft3,p2
+Naive Bayes (Gaussian),sl   ,cl-np,comp2,pb,of1,nl,nd-cd,0,MB-GB,ft1,p3
+Multinomial Naive Bayes,sl   ,cl-np,comp2,pb,of1,nl,cd-td,0,MB-GB,ft1,p3
+Bernoulli Naive Bayes,sl   ,cl-np,comp2,pb,of1,nl,cd-td,0,MB-GB,ft1,p3
+Complement Naive Bayes,sl   ,cl-np,comp2,pb,of1,nl,cd-td,0,MB-GB,ft1,p2
+Bayesian Network Classifier,sl   ,cl-se-fe-np,comp3,pb-rb,of2,bl,nd-cd,0.3,GB,ft2,p2
+Averaged One-Dependence Estimators (AODE),sl   ,cl,comp3,pb,of2,bl,nd-cd,0.3,GB,ft1,p1
+k-Nearest Neighbors (k-NN),sl   ,cl-re-ip-np-g,comp3,cb-vd,of3,nl,nd-cd,0.5,GB,ft1,p3
+Radius Neighbors Classifier,sl   ,cl-re,comp3,cb-vd,of3,nl,nd-cd,0.5,GB,ft1,p1
+Condensed Nearest Neighbor,sl   ,cl,comp3,cb-vd,of2,nl,nd-cd,0.5,GB,ft1,p1
+Edited Nearest Neighbor,sl   ,cl,comp3,cb-vd,of2,nl,nd-cd,0.5,GB,ft1,p1
+Local Outlier Factor (sınıflandırma dışı kullanılsa da bazen dahil edilir),ul ,se-cl,comp3,db,of3,nl,nd-cd,0.5,GB,ft1,p2
+Multilayer Perceptron (MLP Classifier),sl   ,cl-np-ts-ip-so,comp5,nm-nli,of5,ml,nd-cd,0.7,GB-TB,ft3,p3
+Convolutional Neural Networks (CNN),sl   ,ip-np-so-g-fe-dre,comp5,nm-nli,of5,ml-hl-dl,id,1,TB,ft3,p3
+Recurrent Neural Networks (RNN),sl   ,ts-np-so-g-ed,comp5,nm-dy,of5,sl2-ml,tsd-ad-td,1,TB,ft3,p3
+Long Short-Term Memory (LSTM),sl   ,ts-np-so-g-ed,comp5,nm-dy,of5,ml-hl-dl,tsd-ad-td,1,TB,ft3,p3
+Gated Recurrent Units (GRU),sl   ,ts-np-so-g-ed,comp5,nm-dy,of5,ml-dl,tsd-ad-td,1,TB,ft3,p3
+Residual Networks (ResNet),sl   ,ip-fe-so-g,comp5,nm-nli,of5,ml,id-tsd,1,TB,ft3,p3
+"Transformer Classifier (BERT, GPT Classifier Head vs,)",sl   ,np-ts-so-ed-g,comp5,nm-nli,of5,ml-hl-dl,td-id-ad,1,TB,ft3,p3
+Graph Neural Networks (GNN for node classification),sl   ,cl-fe-dre-g-se,comp5,nm-nli,of5,gl,nd-cd-td,1,TB,ft3,p3
+Bagging Classifier,sl   ,cl-re-mol,comp4,ans,of3,hl,nd-cd,0.5,GB-TB,ft2,p3
+Random Subspace Method,sl   ,cl-re-mol,comp4,ans,of3,hl,nd-cd,0.5,GB-TB,ft2,p2
+AdaBoost,sl   ,cl-re-mol,comp4,ans,of4,hl,nd-cd,0.5,GB-TB,ft3,p3
+Gradient Boosting,sl   ,cl-re-mol,comp4,ans-tre,of4,hl,nd-cd,0.5,GB-TB,ft3,p3
+Stacking Classifier,sl   ,cl-re-mol,comp4,ans,of3,hl,nd-cd-td,0.7,GB-TB,ft3,p3
+Voting Classifier,sl   ,cl-re,comp4,ans,of3,hl,nd-cd,0.3,GB-TB,ft2,p3
+Blending,sl   ,cl-re,comp4,ans,of3,hl,nd-cd,0.3,GB-TB,ft2,p2
+LogitBoost,sl   ,cl-re,comp4,ans-li,of4,hl,nd-cd,0.5,GB-TB,ft3,p1
+RUSBoost (Random Under Sampling Boost),sl   ,cl-se,comp4,ans-tre,of4,hl,nd-cd,0.5,GB-TB,ft3,p1
+Balanced Random Forest,sl   ,cl-se,comp4,ans-tre,of3,hl,nd-cd,0.5,GB-TB,ft2,p2
+EasyEnsemble,sl   ,cl-se-mol,comp4,ans-tre,of3,hl,nd-cd,0.5,GB-TB,ft2,p2
+SMOTEBoost,sl   ,cl-se,comp4,ans-tre,of4,hl,nd-cd,0.5,GB-TB,ft3,p2
+OneR,sl   ,cl,comp2,rb,of2,nl,nd-cd,0,MB-GB,ft1,p1
+RIPPER,sl   ,cl,comp3,rb,of3,nl,nd-cd,0,GB,ft2,p1
+PART,sl   ,cl,comp3,rb,of3,nl,nd-cd,0,GB,ft2,p1
+CN2,sl   ,cl,comp3,rb,of3,nl,nd-cd,0,GB,ft2,p1
+Decision Table,sl   ,cl,comp2,rb,of2,nl,nd-cd,0,MB-GB,ft1,p1
+RuleFit,sl   ,cl-re-fe,comp3,li-rb,of3,nl,nd-cd,0.3,GB,ft2,p2
+Learning Vector Quantization (LVQ),sl   ,cl-re-fe,comp3,cb-vd,of3,nl,nd,0.3,GB,ft2,p1
+Self-Organizing Maps (SOM - sınıflandırmada dolaylı kullanılır),ul ,cl-dre-fe-dr,comp4,nm-cb,of3,nl,nd,0.3,GB-TB,ft2,p1
+Extreme Learning Machine (ELM),sl   ,cl-re-fe,comp4,nm-li,of4,sl2,nd-cd,0.5,GB-TB,ft3,p1
+Sparse Representation Classifier,sl   ,cl-fe-dre,comp4,nli-vd,of3,nl,nd,0.5,GB-TB,ft3,p1
+Discriminant Adaptive Nearest Neighbor,sl   ,cl,comp5,cb-vd,of5,ml,nd-cd,0.3,TB,ft3,p1
+Fuzzy k-NN,sl   ,cl,comp3,cb-vd-rb,of3,nl,nd-cd,0.5,GB,ft2,p1
+Fuzzy Decision Tree,sl   ,cl,comp3,tre-rb,of3,nl,nd-cd,0.3,GB,ft2,p1
+Genetic Programming Classifier,sl   ,cl-g-mol,comp4,rb-nli,of4,nl-gl,nd-cd,0.7,GB-TB,ft3,p1
+Deep Forest (gcForest),sl   ,cl-re-mol,comp4,ans-tre,of4,hl,nd-cd,0.7,GB-TB,ft3,p2
+Tsetlin Machine,sl   ,cl-re-se,comp3,rb-nm,of3,nl,nd-cd,0.5,GB,ft2,p1
+Quantum Classifier (gelişmekte),sl   ,cl-re-se-mol,comp5,sb-pb-nli,of4,ml,nd-cd,1,GB-TB,ft3,p1
+Relevance Vector Machine (RVM),sl   ,cl-re,comp4,li-pb-sb,of3,sl2,nd-cd,0.5,GB,ft3,p1
+Probabilistic Neural Network (PNN),sl   ,cl-re,comp5,pb-nm,of5,ml,nd-cd,0.5,TB,ft3,p1
+Parzen Window Classifier,sl   ,cl,comp3,pb-vd,of3,nl,nd-cd,0.3,GB,ft2,p1
+Maximum Entropy Classifier (MaxEnt),sl   ,cl-np,comp3,li-pb,of2,sl2,td-nd,0.3,GB,ft2,p1
+Winnow Algorithm,sl   ,cl-np,comp2,li,of2,sl2,nd-cd,0.3,MB-GB,ft1,p1
+Hoeffding Tree (Stream data için),sl   ,cl-re-mol-se,comp3,tre,of3,sl2,tsd,0.3,GB,ft2,p1
+Mondrian Forest (Online classification),sl   ,cl-re-mol,comp4,ans-tre,of3,hl,tsd-nd-cd,0.5,GB-TB,ft2,p1
+Online Passive-Aggressive Algorithms,sl   ,cl-np-mol-ts,comp3,li,of3,sl2,nd-cd,0.3,GB,ft2,p2
+Cost-Sensitive Classifier,sl   ,cl-se,comp4,li-tre-ans,of3,hl,nd-cd,0.3,GB-TB,ft3,p2
+Cascading Classifier,sl   ,cl-mol,comp4,ans-rb,of3,hl,nd-cd-id,0.5,GB-TB,ft3,p1
+One-vs-Rest / One-vs-One strategies (çok sınıflı problemler için stratejidir),sl   ,cl-mol,comp4,strateji,of3,hl,nd-cd-td,0.5,GB-TB,ft3,p3
+Twin SVM (TWSVM),sl   ,cl-re,comp4,sb-li,of4,sl2,nd-cd,0.5,GB,ft3,p1
+Fisher Discriminant Analysis (FDA),sl   ,cl-dre-fe,comp2,li,of2,sl2,nd-cd,0,MB-GB,ft1,p1
+Minimum Distance Classifier,sl   ,cl,comp2,cb-vd,of2,nl,nd-cd,0,MB-GB,ft1,p1
+Hyperbox Classifier (Fuzzy Min-Max Classifier),sl   ,cl-se,comp3,cb-rb,of3,nl,nd-cd,0.3,GB,ft2,p1
+Quadratic Discriminant Analysis (QDA),sl   ,cl-re,comp3,pb-nli,of3,sl2,nd-cd,0.3,GB,ft2,p2
+Mahalanobis Distance Classifier,sl   ,cl-fe,comp2,cb-vd,of2,nl,nd-cd,0.3,MB-GB,ft1,p1
+Probabilistic Decision Trees,sl   ,cl-re,comp3,tre-pb,of3,sl2,nd-cd,0.5,GB,ft2,p1
+Takagi-Sugeno Fuzzy Classifier,sl   ,cl-fe-se,comp3,tre-rb-pb,of3,nl,nd-cd,0.5,GB,ft2,p1
+Incremental Tree Inducer,sl   ,cl-mol,comp3,tre,of3,sl2,tsd-nd-cd,0.5,GB,ft2,p1
+Cover’s Theorem Based Classifier,sl   ,cl,comp4,nli,of4,sl2,nd-cd,0.3,GB-TB,ft3,p1
+Capsule Networks (CapsNet),sl   ,ip-np-fe-so-g,comp5,nm-nli,of5,ml,id-td,1,TB,ft3,p2
+Few-Shot Classifier,sl   ,cl-np-ip-g-ed,comp5,nm-nli-pb,of5,ml,td-id,1,TB,ft3,p2
+Zero-Shot Classifier,ssl,cl-np-ip-so-g-ed,comp5,nm-pb-sb,of5,ml-hl-dl,td-id,1,TB,ft3,p2
+Self-Supervised Classifier,ssl,cl-np-ip-ts-so-dr-ed-fe,comp5,nm-pb-nli,of5,ml,td-id,1,TB,ft3,p2
+Graph Attention Networks (GAT) for classification,sl   ,cl-dre-fe-se-g,comp5,nm-nli,of5,gl,nd-cd-td,1,TB,ft3,p2
+Swarm Intelligence Classifier,sl   ,cl-re-mol-g,comp4,nli-cb-vd,of4,nl-gl,nd-cd,0.7,GB-TB,ft3,p1
+Neuroevolutionary Classifier,sl   ,cl-g-mol,comp5,nm-ans-nli,of5,ml,nd-cd-id,1,TB,ft3,p1
+Quantum Support Vector Machine (QSVM),sl   ,cl-re-se-mol,comp5,sb-nli-pb,of4,sl2,nd-cd,1,GB-TB,ft3,p1
+Hybrid Rule + Neural Classifier,sl   ,cl-fe-se,comp5,nm-rb,of5,ml,nd-cd-td,0.7,TB,ft3,p1
+Multiview Classifier,sl   ,cl-dre-fe,comp4,ans-nm-li-nli,of4,hl,nd-cd-td-id-tsd,1,GB-TB,ft3,p1
+Evolutionary Decision Trees,sl   ,cl-mol,comp4,tre-ans,of4,hl,nd-cd,0.7,GB-TB,ft3,p1
+Neuro-Fuzzy Classifier,sl   ,cl-fe-se,comp5,nm-rb,of5,ml-nl,nd-cd,0.7,TB,ft3,p1
+Ar,sl, ts-re,comp2,li,of2,sl2,nd,0,MB-GB,ft1,p4
+Arıma,sl, ts-re,comp3,li,of2,sl2,nd,0,MB-GB,ft2,p4
+Arma,sl, ts-re,comp3,li,of2,sl2,nd,0,MB-GB,ft2,p3
+AutoKeras (TS),sl,mol,comp4,nm,of4,dl,nd,1,GB-TB,ft3,p3
+Autots,sl,mol,comp4,ans,of3,dl,nd,0.3,GB-TB,ft3,p3
+Bayesian Structural Time Series (BSTS),sl,ts-re,comp4,pb,of3,dl,nd,0.3,MB-GB,ft2,p2
+DeepAR (Amazon),sl, ts-re,comp4,nm,of4,dl,nd,1,GB-TB,ft3,p3
+Dtw (Dynamic Time Warping),sl,cl,comp3,vd,of2,sl2,nd,0.3,MB-GB,ft1,p3
+Esrnn (Uber),sl, ts-re,comp4,nm,of4,dl,nd,1,GB-TB,ft3,p2
+Ets (Exponential Smoothing),yl,ts-re,comp2,li,of2,sl2,nd,0,MB-GB,ft1,p4
+Extended Kalman Filter,sl, ts-re-se,comp4,pb,of3,dl,nd,0.3,MB-GB,ft2,p2
+Facebook Prophet,sl, ts-np- vis,comp3,pb,of2,dl,nd,0,GB,ft1,p4
+Fft + Ml,sl,ts-so-re-cl-dre-fe,comp3,ans,of2,dl,nd,0.3,GB,ft2,p3
+Gaussian Process Regression,sl,re-se-dr-dre,comp4,pb,of4,sl2,nd,1,MB-GB,ft2,p3
+Gru,sl,ts-re ,comp4,nm,of4,dl,nd,1,GB-TB,ft3,p3
+Holt-Winters,sl, ts- re,comp2,li,of2,sl2,nd,0,MB-GB,ft1,p4
+Informer,sl,cl-re-ts-fe-dr-dap-dre,comp4,nm,of5,dl,nd,1,GB-TB,ft3,p2
+Kalman Filter,sl,cl-re-ts-fe-dr-se-dre-mol,comp3,pb,of2,sl2-dl,nd,0-0.3,MB-GB,ft2,p3
+Knn for TS,sl,cl-ts-dr-fe-se-dre,comp3,cb,of2,sl2,nd,0.3,GB,ft2,p3
+Lightgbm (Ts features),sl,ts-cl-re-fe-dre-dr-dap-mol,comp3,tre,of4,dl,nd,0.3,GB,ft2,p4
+Lstm,sl,cl-re- ts-dr-dap-dre-fe-se-mol,comp4,nm,of4,dl,nd,1,GB-TB,ft3,p4
+Ma(Moving Average),sl,cl-re-ts-dr-dap-dre-fe-se-mol-so,comp2,li,of2,sl2,nd,0,MB-GB,ft1,p4
+N-beats,sl,re-ts-dr-dap-dre-fe-mol,comp4,nm,of4,dl,nd,1,GB-TB,ft3,p3
+Particle Filter,sl,"cl-re-ip-ts-dr-dap-dre-fe-se-mol",comp4,pb,of2,dl,nd,0.3,MB-GB,ft2,p2
+Prophet (Facebook),sl,cl-re-ts-dr-dap-dre-fe-vis-mol,comp3,pb,of2,dl,nd,0,GB,ft1,p4
+Random Forest (Ts features),sl,fe-cl-dre-dr-mol,comp3,ans,of2,dl,nd,0.3,GB,ft2,p4
+Sarımax,sl, ts-re,comp3,li,of3,dl,nd,0,MB-GB,ft2,p4
+Sarımax,sl,re-ts-dr-dap-dre-fe-mol,comp3,li,of3,dl,nd,0.3,MB-GB,ft2,p3
+Stl Decomposition,sl,ts-re,comp3,dy,of2,dl,nd,0,MB-GB,ft1,p3
+Sur (Seemingly Unrelated Regression),sl,re-ts-dr-dap-dre-fe-mol,comp3,li,of3,dl,nd,0.3,MB-GB,ft2,p2
+Tcn(Temporal Conv. Net),sl,cl-re-ts-dr-dap-dre-fe-se-mol,comp4,nm,of4,dl,nd,1,GB-TB,ft3,p3
+Temporal Fusion Transformer (Tft),sl,cl-re-ts-dr-dap-dre-fe-se-mol,comp4,nm,of5,dl,nd,1,GB-TB,ft3,p2
+"Transformer (Tst, Informer)",sl,cl-re-ts-dr-dap-dre-fe-vis-mol,comp4,nm,of5,dl,nd,1,GB-TB,ft3,p3
+Var (Vector Autoregression),sl,re-ts-dr-dap-dre-fe-mol,comp3,li,of3,dl,nd,0.3,MB-GB,ft2,p3
+Varma,sl,	ts-re,comp3,li,of3,dl,nd,0.3,MB-GB,ft2,p2
+Vecm,sl,	ts-re,comp3,li,of3,dl,nd,0.3,MB-GB,ft2,p3
+Xgboost (Ts features),sl,	ts-re,comp3,tre,of4,dl,nd,0.7,GB,ft2,p4
