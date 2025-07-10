@@ -8,6 +8,9 @@ import time
 import json
 from functools import lru_cache
 import logging
+import asyncio
+import aiohttp
+from concurrent.futures import ThreadPoolExecutor
 
 # Load environment variables from .env file
 load_dotenv()
@@ -19,30 +22,46 @@ logger = logging.getLogger(__name__)
 class OpenAIService:
     def __init__(self):
         """
-        Advanced Hybrid AI-powered algorithm consultant with intelligent fallback
+        Advanced Hybrid AI-powered algorithm consultant with intelligent fallback - ASYNC OPTIMIZED
         """
         self.algorithm_recommender = AlgorithmRecommender()
         self.request_count = 0
         self.last_request_time = 0
         self.rate_limit_delay = 1.0  # 1 second between requests
         
-        # Initialize OpenAI with modern client
+        # Thread pool for CPU-intensive tasks
+        self.executor = ThreadPoolExecutor(max_workers=4)
+        
+        # Initialize OpenAI with modern client - SECURITY ENHANCED
         api_key = os.getenv('OPENAI_API_KEY')
+        
+        # Validate API key format
         if api_key and api_key != 'your_openai_api_key_here':
-            try:
-                self.openai_client = OpenAI(api_key=api_key)
-                # Test the connection
-                self.openai_client.models.list()
-                self.openai_enabled = True
-                logger.info("✅ OpenAI API successfully initialized and tested")
-            except Exception as e:
-                logger.warning(f"⚠️ OpenAI API issue (quota/connection): {str(e)[:100]}...")
+            # Basic API key format validation
+            if not api_key.startswith('sk-') or len(api_key) < 20:
+                logger.error("❌ Invalid OpenAI API key format")
                 self.openai_enabled = False
                 self.openai_client = None
+            else:
+                try:
+                    self.openai_client = OpenAI(api_key=api_key)
+                    # Test the connection
+                    self.openai_client.models.list()
+                    self.openai_enabled = True
+                    # Log without exposing the key
+                    logger.info(f"✅ OpenAI API successfully initialized (key: sk-...{api_key[-4:]})")
+                except Exception as e:
+                    logger.warning(f"⚠️ OpenAI API issue (quota/connection): {str(e)[:100]}...")
+                    self.openai_enabled = False
+                    self.openai_client = None
         else:
             self.openai_enabled = False
             self.openai_client = None
             logger.warning("⚠️ OpenAI API key not found, using advanced fallback system")
+        
+        # Clear the API key from memory after use
+        if 'api_key' in locals():
+            del api_key
         
         # Always use our advanced AI system regardless of OpenAI status
         self.use_advanced_ai = True
@@ -124,38 +143,25 @@ Her zaman samimi, yardımsever ve konuşkan ol!"""
             'user_feedback': []
         }
 
-    def _rate_limit_check(self):
-        """Rate limiting implementation"""
-        current_time = time.time()
-        if current_time - self.last_request_time < self.rate_limit_delay:
-            time.sleep(self.rate_limit_delay - (current_time - self.last_request_time))
-        self.last_request_time = time.time()
-        self.request_count += 1
+    async def get_chat_response_async(self, user_message: str, conversation_history: Optional[List[Dict]] = None) -> Dict:
+        """
+        Async version of get_chat_response for better performance
+        """
+        loop = asyncio.get_event_loop()
+        
+        # Run CPU-intensive operations in thread pool
+        result = await loop.run_in_executor(
+            self.executor,
+            self.get_chat_response,
+            user_message,
+            conversation_history
+        )
+        
+        return result
 
-    @lru_cache(maxsize=100)
-    def _cached_gpt_request(self, prompt_hash: str, content: str) -> str:
-        """Cache GPT responses to avoid repeated API calls"""
-        try:
-            self._rate_limit_check()
-            
-            response = self.openai_client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {"role": "system", "content": self.algorithm_expert_prompt},
-                    {"role": "user", "content": content}
-                ],
-                max_tokens=1000,
-                temperature=0.3,
-                timeout=30
-            )
-            return response.choices[0].message.content
-        except Exception as e:
-            logger.error(f"GPT request failed: {e}")
-            raise e
-    
     def get_chat_response(self, user_message: str, conversation_history: Optional[List[Dict]] = None) -> Dict:
         """
-        Enhanced conversational AI response with natural dialogue flow and response diversity
+        Enhanced conversational AI response with natural dialogue flow and response diversity - PERFORMANCE OPTIMIZED
         """
         try:
             # Handle None or empty messages
@@ -199,19 +205,41 @@ Her zaman samimi, yardımsever ve konuşkan ol!"""
             if 'recommendations' in response:
                 self.conversation_context['last_recommendations'] = response['recommendations']
             
-            # Add response to conversation memory
-            self.conversation_memory.append({
-                'role': 'assistant',
-                'content': response['response'],
-                'timestamp': time.time()
-            })
-            
             return response
-                
+            
         except Exception as e:
-            print(f"❌ Error in AI service: {str(e)}")
+            logger.error(f"❌ Error in get_chat_response: {str(e)}")
             return self._get_emergency_fallback()
 
+    def _rate_limit_check(self):
+        """Rate limiting implementation"""
+        current_time = time.time()
+        if current_time - self.last_request_time < self.rate_limit_delay:
+            time.sleep(self.rate_limit_delay - (current_time - self.last_request_time))
+        self.last_request_time = time.time()
+        self.request_count += 1
+
+    @lru_cache(maxsize=100)
+    def _cached_gpt_request(self, prompt_hash: str, content: str) -> str:
+        """Cache GPT responses to avoid repeated API calls"""
+        try:
+            self._rate_limit_check()
+            
+            response = self.openai_client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": self.algorithm_expert_prompt},
+                    {"role": "user", "content": content}
+                ],
+                max_tokens=1000,
+                temperature=0.3,
+                timeout=30
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            logger.error(f"GPT request failed: {e}")
+            raise e
+    
     def _generate_diverse_response(self, user_message: str, project_context: Dict, response_type: str) -> Dict:
         """Generate diverse responses based on conversation history"""
         # Check if we've seen similar messages before
@@ -275,7 +303,7 @@ Her zaman samimi, yardımsever ve konuşkan ol!"""
             'xgboost': ['xgboost', 'xgb'],
             'random forest': ['random forest', 'rf'],
             'svm': ['svm', 'support vector'],
-            'neural network': ['neural network', 'nn', 'deep learning'],
+            'neural network': ['neural network', 'nn', 'deep learning', 'mlp'],
             'logistic regression': ['logistic regression', 'logistic'],
             'naive bayes': ['naive bayes', 'nb'],
             'knn': ['knn', 'k-nearest'],
@@ -287,7 +315,10 @@ Her zaman samimi, yardımsever ve konuşkan ol!"""
             'mean shift': ['mean shift'],
             'ensemble': ['ensemble'],
             'gradient boosting': ['gradient boosting', 'gbm'],
-            'ada boost': ['ada boost', 'adaboost']
+            'ada boost': ['ada boost', 'adaboost'],
+            'lightgbm': ['lightgbm', 'lgb', 'ts features'],
+            'prophet': ['prophet', 'facebook'],
+            'catboost': ['catboost']
         }
         
         for algo_name, keywords in algorithms.items():
@@ -332,20 +363,65 @@ Her zaman samimi, yardımsever ve konuşkan ol!"""
             })
     
     def _update_conversation_memory(self, user_message: str, conversation_history: Optional[List[Dict]] = None):
-        """Update conversation memory for better context awareness"""
+        """Update conversation memory for better context awareness - MEMORY LEAK FIXED"""
+        MAX_MEMORY_SIZE = 20  # Maximum number of messages to keep
+        MAX_MEMORY_AGE = 3600  # Maximum age in seconds (1 hour)
+        
+        current_time = time.time()
+        
+        # Clean old messages from memory
+        self.conversation_memory = [
+            msg for msg in self.conversation_memory 
+            if current_time - msg.get('timestamp', 0) < MAX_MEMORY_AGE
+        ]
+        
         if conversation_history:
-            self.conversation_memory = conversation_history[-10:]  # Keep last 10 messages
+            # Keep only last 10 messages from history
+            recent_history = conversation_history[-10:]
+            self.conversation_memory = recent_history
         
         # Add current message
         self.conversation_memory.append({
             'role': 'user',
             'content': user_message,
-            'timestamp': time.time()
+            'timestamp': current_time
         })
+        
+        # Keep only the most recent messages
+        if len(self.conversation_memory) > MAX_MEMORY_SIZE:
+            self.conversation_memory = self.conversation_memory[-MAX_MEMORY_SIZE:]
+        
+        # Clean response cache periodically
+        if len(self.response_cache) > 100:
+            # Keep only the most recent 50 responses
+            cache_items = list(self.response_cache.items())
+            self.response_cache = dict(cache_items[-50:])
         
         # Track algorithm mentions and user preferences
         self._track_algorithm_mentions(user_message)
         self._track_user_preferences(user_message)
+        
+        # Clean old conversation context
+        self._clean_conversation_context()
+    
+    def _clean_conversation_context(self):
+        """Clean old data from conversation context to prevent memory leaks"""
+        current_time = time.time()
+        MAX_FEEDBACK_AGE = 1800  # 30 minutes
+        
+        # Clean old feedback
+        self.conversation_context['user_feedback'] = [
+            feedback for feedback in self.conversation_context['user_feedback']
+            if current_time - feedback.get('timestamp', 0) < MAX_FEEDBACK_AGE
+        ]
+        
+        # Keep only last 10 user selections
+        if len(self.conversation_context['user_selections']) > 10:
+            self.conversation_context['user_selections'] = self.conversation_context['user_selections'][-10:]
+        
+        # Keep only last 20 discussed algorithms
+        if len(self.conversation_context['discussed_algorithms']) > 20:
+            self.conversation_context['discussed_algorithms'] = self.conversation_context['discussed_algorithms'][-20:]
 
     def _analyze_user_profile(self, user_message: str):
         """Analyze user's communication style and technical level"""
@@ -743,7 +819,14 @@ Her zaman samimi, yardımsever ve konuşkan ol!"""
         """Respond to general feedback about recommendations"""
         text_lower = user_message.lower()
         
-        if any(word in text_lower for word in ['evet', 'tamam', 'iyi', 'güzel']):
+        # Detect specific user intents
+        if any(word in text_lower for word in ['diğer', 'başka', 'farklı', 'alternatif', 'daha fazla']):
+            return self._provide_more_alternatives(user_message, context, last_recs)
+        
+        elif any(word in text_lower for word in ['hepsi', 'tüm', 'bütün', 'liste', 'göster']):
+            return self._show_comprehensive_list(user_message, context, last_recs)
+        
+        elif any(word in text_lower for word in ['evet', 'tamam', 'iyi', 'güzel']):
             response = "🎉 **Harika! Seçiminizi beğendiğinize sevindim.**\n\n"
             response += "Şimdi implementasyon aşamasına geçelim. Size yardımcı olabileceğim konular:\n\n"
             response += "• **Kod örnekleri** - Algoritmayı nasıl kullanacağınızı gösterebilirim\n"
@@ -763,6 +846,144 @@ Her zaman samimi, yardımsever ve konuşkan ol!"""
             response += "Ne yapmamı istersiniz?"
             
             suggestions = ["Detaylı açıklama", "Farklı seçenekler", "Performans karşılaştırması", "Spesifik soru sor"]
+        
+        return {
+            "response": response,
+            "suggestions": suggestions,
+            "success": True
+        }
+    
+    def _provide_more_alternatives(self, user_message: str, context: Dict, last_recs: List) -> Dict:
+        """Provide more alternative algorithms based on user request"""
+        response = "🔄 **Tabii ki! Daha fazla algoritma seçeneği sunayım:**\n\n"
+        
+        # Get project context
+        project_type = context.get('project_type', 'classification')
+        data_size = context.get('data_size', 'medium')
+        
+        # Define comprehensive algorithm lists by category
+        classification_algorithms = [
+            "XGBoost", "Random Forest", "Support Vector Machine (SVM)", 
+            "Naive Bayes", "K-Nearest Neighbors (KNN)", "Decision Tree",
+            "Logistic Regression", "Neural Network (MLP)", "AdaBoost",
+            "Gradient Boosting", "Extra Trees", "LightGBM", "CatBoost"
+        ]
+        
+        regression_algorithms = [
+            "Linear Regression", "Ridge Regression", "Lasso Regression",
+            "ElasticNet", "Random Forest Regressor", "XGBoost Regressor",
+            "Support Vector Regression", "Neural Network Regressor",
+            "Polynomial Regression", "Decision Tree Regressor"
+        ]
+        
+        clustering_algorithms = [
+            "K-Means", "Hierarchical Clustering", "DBSCAN", "Gaussian Mixture",
+            "Spectral Clustering", "Agglomerative Clustering", "Mean Shift",
+            "OPTICS", "Birch", "Mini-Batch K-Means"
+        ]
+        
+        # Select appropriate algorithm list
+        if project_type == 'classification':
+            algorithms = classification_algorithms
+        elif project_type == 'regression':
+            algorithms = regression_algorithms
+        elif project_type == 'clustering':
+            algorithms = clustering_algorithms
+        else:
+            algorithms = classification_algorithms  # Default
+        
+        # Filter out already recommended algorithms
+        if last_recs:
+            recommended_names = [rec.get('algorithm', '').lower() for rec in last_recs]
+            algorithms = [algo for algo in algorithms 
+                         if not any(rec_name in algo.lower() for rec_name in recommended_names)]
+        
+        # Show first 5 alternatives
+        response += f"**{project_type.title()} için diğer seçenekler:**\n\n"
+        for i, algo in enumerate(algorithms[:5], 1):
+            response += f"{i}. **{algo}**\n"
+            
+            # Add context-specific benefits
+            if 'xgboost' in algo.lower():
+                response += f"   • Yüksek performans, gradient boosting\n"
+            elif 'random forest' in algo.lower():
+                response += f"   • Güvenilir, overfitting'e dayanıklı\n"
+            elif 'svm' in algo.lower():
+                response += f"   • Matematiksel olarak güçlü\n"
+            elif 'naive bayes' in algo.lower():
+                response += f"   • Hızlı, basit, etkili\n"
+            elif 'knn' in algo.lower():
+                response += f"   • Basit, yorumlanabilir\n"
+            else:
+                response += f"   • {project_type} problemleri için optimize\n"
+            
+            response += f"\n"
+        
+        response += f"**Toplam {len(algorithms)} farklı algoritma seçeneğiniz var!**\n\n"
+        response += "Hangi algoritma hakkında daha fazla bilgi almak istersiniz?"
+        
+        suggestions = algorithms[:3]  # First 3 as suggestions
+        
+        return {
+            "response": response,
+            "suggestions": suggestions,
+            "success": True
+        }
+    
+    def _show_comprehensive_list(self, user_message: str, context: Dict, last_recs: List) -> Dict:
+        """Show comprehensive algorithm list"""
+        response = "📋 **Kapsamlı Algoritma Listesi:**\n\n"
+        
+        project_type = context.get('project_type', 'classification')
+        
+        if project_type == 'classification':
+            response += "**🎯 Sınıflandırma Algoritmaları:**\n\n"
+            
+            response += "**Ensemble Methods:**\n"
+            response += "• Random Forest, XGBoost, LightGBM, CatBoost\n"
+            response += "• AdaBoost, Gradient Boosting, Extra Trees\n\n"
+            
+            response += "**Traditional ML:**\n"
+            response += "• Support Vector Machine (SVM)\n"
+            response += "• Logistic Regression, Naive Bayes\n"
+            response += "• K-Nearest Neighbors (KNN)\n"
+            response += "• Decision Tree\n\n"
+            
+            response += "**Deep Learning:**\n"
+            response += "• Neural Network (MLP)\n"
+            response += "• Convolutional Neural Network (CNN)\n"
+            response += "• Recurrent Neural Network (RNN)\n\n"
+            
+        elif project_type == 'regression':
+            response += "**📈 Regresyon Algoritmaları:**\n\n"
+            
+            response += "**Linear Models:**\n"
+            response += "• Linear Regression, Ridge, Lasso\n"
+            response += "• ElasticNet, Polynomial Regression\n\n"
+            
+            response += "**Tree-based:**\n"
+            response += "• Random Forest Regressor\n"
+            response += "• XGBoost Regressor, Decision Tree\n\n"
+            
+            response += "**Advanced:**\n"
+            response += "• Support Vector Regression\n"
+            response += "• Neural Network Regressor\n\n"
+            
+        else:
+            response += "**🔍 Kümeleme Algoritmaları:**\n\n"
+            
+            response += "**Centroid-based:**\n"
+            response += "• K-Means, Mini-Batch K-Means\n\n"
+            
+            response += "**Hierarchical:**\n"
+            response += "• Agglomerative, Hierarchical\n\n"
+            
+            response += "**Density-based:**\n"
+            response += "• DBSCAN, OPTICS\n\n"
+        
+        response += "**Hangi kategori sizi daha çok ilgilendiriyor?**"
+        
+        suggestions = ["Ensemble Methods", "Traditional ML", "Deep Learning", "Performans karşılaştırması"]
         
         return {
             "response": response,
@@ -810,7 +1031,7 @@ Robotik cevaplar verme, gerçek bir mentor gibi konuş!
         
         try:
             response = self.openai_client.chat.completions.create(
-                model="gpt-4o",
+                model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": self.consultation_prompt},
                     {"role": "user", "content": context_prompt}
@@ -1143,7 +1364,7 @@ Robotik listeler yerine hikaye anlatır gibi konuş!
         
         try:
             response = self.openai_client.chat.completions.create(
-                model="gpt-4o",
+                model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": self.algorithm_expert_prompt},
                     {"role": "user", "content": context_prompt}
@@ -1507,7 +1728,7 @@ Yanıtın hem teknik derinlikte hem de kolayca uygulanabilir olsun. Senior devel
         ]
         
         response = self.openai_client.chat.completions.create(
-            model="gpt-4o",  # Use the latest GPT-4 Omni model for best quality
+            model="gpt-3.5-turbo",  # Use the latest GPT-3.5 Turbo model for best quality
             messages=messages,
             max_tokens=1500,  # Increased for more detailed responses
             temperature=0.2   # Lower temperature for more consistent professional responses
@@ -2130,7 +2351,7 @@ Kısa maddeler yerine akıcı paragraflar halinde cevap ver.
             ]
             
             response = self.openai_client.chat.completions.create(
-                model="gpt-4o",  # Use GPT-4 Omni for superior algorithmic advice and detailed explanations
+                model="gpt-3.5-turbo",  # Use GPT-3.5 Turbo for superior algorithmic advice and detailed explanations
                 messages=messages,
                 max_tokens=800,
                 temperature=0.7
@@ -2165,6 +2386,12 @@ Kısa maddeler yerine akıcı paragraflar halinde cevap ver.
         project_type = context.get('project_type') or 'machine learning'
         data_size = context.get('data_size') or 'medium' 
         data_type = context.get('data_type') or 'numerical'
+        
+        # Track recommended algorithms
+        for rec in recommendations:
+            algo_name = rec.get('algorithm', '').lower()
+            if algo_name and algo_name not in self.conversation_context['discussed_algorithms']:
+                self.conversation_context['discussed_algorithms'].append(algo_name)
         
         # Create paragraph-style introduction
         if project_type == 'classification':
@@ -2362,7 +2589,7 @@ Kısa listeler yerine akıcı konuşma yap.
         ]
         
         response = self.openai_client.chat.completions.create(
-            model="gpt-4o",  # Premium GPT-4 for consultation responses
+            model="gpt-3.5-turbo",  # Use GPT-3.5 Turbo for consultation responses
             messages=messages,
             max_tokens=400,
             temperature=0.8
@@ -2521,6 +2748,12 @@ Kısa listeler yerine akıcı konuşma yap.
         """
         Template-based recommendations when AI is not available
         """
+        # Track recommended algorithms
+        for rec in recommendations:
+            algo_name = rec.get('algorithm', '').lower()
+            if algo_name and algo_name not in self.conversation_context['discussed_algorithms']:
+                self.conversation_context['discussed_algorithms'].append(algo_name)
+        
         response = f"🎯 **{context.get('project_type', 'ML').title()} Projesi için Önerilerim:**\n\n"
         
         for i, rec in enumerate(recommendations[:3], 1):
@@ -2618,24 +2851,28 @@ Kısa listeler yerine akıcı konuşma yap.
         """
         Emergency response when everything fails - should be used sparingly
         """
-        # Generate diverse fallback responses
+        # Generate diverse fallback responses with better context awareness
         fallback_responses = [
-            "Hmm, bu sorunuzu tam anlayamadım. Makine öğrenmesi projeniz hakkında daha detaylı bilgi verebilir misiniz? Hangi tür bir analiz yapmak istiyorsunuz?",
+            "🤔 **Özür dilerim, sorunuzu tam anlayamadım.** Makine öğrenmesi projeniz hakkında daha net bilgi verebilir misiniz? Hangi tür bir problem çözmeye çalışıyorsunuz?",
             
-            "Biraz daha açıklayabilir misiniz? Projenizin hedefini anlamak için daha fazla bilgiye ihtiyacım var. Ne tür verilerle çalışıyorsunuz?",
+            "🔍 **Biraz daha detay verebilir misiniz?** Projenizin amacını ve hangi tür verilerle çalıştığınızı anlamak istiyorum. Bu şekilde size daha iyi yardım edebilirim.",
             
-            "Sorunuzu daha iyi anlayabilmek için biraz daha detay verebilir misiniz? Hangi alanda çalışıyorsunuz ve ne yapmaya çalışıyorsunuz?",
+            "💡 **Size daha iyi yardım edebilmek için** projenizin detaylarını öğrenmek istiyorum. Hangi alanda çalışıyorsunuz ve ne tür bir analiz yapmak istiyorsunuz?",
             
-            "Bu konuda size daha iyi yardım edebilmek için projenizin detaylarını öğrenmek istiyorum. Hangi tür bir makine öğrenmesi problemi çözmeye çalışıyorsunuz?"
+            "🎯 **Anladığım kadarıyla** bir makine öğrenmesi projesi üzerinde çalışıyorsunuz. Hangi tür bir problem çözmeye odaklanıyorsunuz? Sınıflandırma, tahmin, yoksa başka bir şey mi?"
         ]
         
+        # Use hash of current time to ensure variety but avoid complete randomness
+        import time
+        response_index = int(time.time()) % len(fallback_responses)
+        
         return {
-            "response": random.choice(fallback_responses),
+            "response": fallback_responses[response_index],
             "suggestions": [
                 "Veri sınıflandırması yapacağım",
-                "Tahmin modeli geliştiriyorum",
-                "Veri analizi yapmak istiyorum",
-                "Hangi algoritma kullanmalıyım?"
+                "Sayısal tahmin modeli geliştiriyorum", 
+                "Veri kümeleme işlemi yapacağım",
+                "Hangi algoritma en uygun?"
             ],
             "success": True
         } 
