@@ -7,23 +7,29 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import StandardScaler
 import json
 from datetime import datetime
+from functools import lru_cache
+import hashlib
 
 # Configure logging
 logger = logging.getLogger(__name__)
 
 class AlgorithmRecommender:
+    # Class-level cache for dataset (shared across instances)
+    _dataset_cache = None
+    _feature_matrix_cache = None
+    _scaler_cache = None
+    _cache_timestamp = None
+    _cache_file_hash = None
+    
     def __init__(self):
         """
-        Advanced Algorithm Recommendation System with ML-based scoring
+        Advanced Algorithm Recommendation System with ML-based scoring - PERFORMANCE OPTIMIZED
         """
-        self.df = None
-        self.feature_matrix = None
-        self.scaler = StandardScaler()
-        self.algorithm_features = {}
         self.performance_cache = {}
         
-        self.load_dataset()
-        self.preprocess_features()
+        # Load dataset with caching
+        self.load_dataset_cached()
+        self.preprocess_features_cached()
         
         # Enhanced coding system mappings
         self.mappings = {
@@ -102,9 +108,17 @@ class AlgorithmRecommender:
             }
         }
     
-    def load_dataset(self):
+    def _get_file_hash(self, file_path: str) -> str:
+        """Get file hash for cache validation"""
+        try:
+            with open(file_path, 'rb') as f:
+                return hashlib.md5(f.read()).hexdigest()
+        except:
+            return None
+    
+    def load_dataset_cached(self):
         """
-        Load algorithm dataset with error handling and validation
+        Load algorithm dataset with caching - PERFORMANCE OPTIMIZED
         """
         try:
             dataset_paths = [
@@ -113,34 +127,71 @@ class AlgorithmRecommender:
                 'Algoritma_Veri_Seti.xlsx'
             ]
             
+            current_file_path = None
             for path in dataset_paths:
                 if os.path.exists(path):
-                    if path.endswith('.csv'):
-                        self.df = pd.read_csv(path)
-                    elif path.endswith('.xlsx'):
-                        self.df = pd.read_excel(path)
-                    
-                    logger.info(f"✅ Dataset loaded successfully from {path}: {len(self.df)} algorithms")
-                    
-                    # Validate dataset structure
-                    required_columns = ['Algoritma Adı', 'Öğrenme Türü', 'Kullanım Alanı', 'Karmaşıklık Düzeyi']
-                    if all(col in self.df.columns for col in required_columns):
-                        logger.info("✅ Dataset structure validated")
-                        return
-            else:
-                        logger.warning(f"⚠️ Missing required columns in {path}")
-                        
-            logger.error("❌ No valid dataset found")
+                    current_file_path = path
+                    break
+            
+            if not current_file_path:
+                logger.error("❌ No valid dataset found")
+                self.df = None
+                return
+            
+            # Check if we need to reload (file changed or cache expired)
+            current_file_hash = self._get_file_hash(current_file_path)
+            cache_valid = (
+                AlgorithmRecommender._dataset_cache is not None and
+                AlgorithmRecommender._cache_file_hash == current_file_hash and
+                AlgorithmRecommender._cache_timestamp is not None and
+                (datetime.now() - AlgorithmRecommender._cache_timestamp).seconds < 3600  # 1 hour cache
+            )
+            
+            if cache_valid:
+                logger.info("✅ Using cached dataset")
+                self.df = AlgorithmRecommender._dataset_cache
+                return
+            
+            # Load dataset
+            if current_file_path.endswith('.csv'):
+                df = pd.read_csv(current_file_path)
+            elif current_file_path.endswith('.xlsx'):
+                df = pd.read_excel(current_file_path)
+            
+            # Validate dataset structure
+            required_columns = ['Algoritma Adı', 'Öğrenme Türü', 'Kullanım Alanı', 'Karmaşıklık Düzeyi']
+            if not all(col in df.columns for col in required_columns):
+                logger.warning(f"⚠️ Missing required columns in {current_file_path}")
+                self.df = None
+                return
+            
+            # Cache the dataset
+            AlgorithmRecommender._dataset_cache = df
+            AlgorithmRecommender._cache_file_hash = current_file_hash
+            AlgorithmRecommender._cache_timestamp = datetime.now()
+            
+            self.df = df
+            logger.info(f"✅ Dataset loaded and cached from {current_file_path}: {len(self.df)} algorithms")
             
         except Exception as e:
             logger.error(f"❌ Error loading dataset: {str(e)}")
             self.df = None
     
-    def preprocess_features(self):
+    def preprocess_features_cached(self):
         """
-        Preprocess algorithm features for ML-based recommendations
+        Preprocess algorithm features with caching - PERFORMANCE OPTIMIZED
         """
         if self.df is None:
+            return
+        
+        # Check if we can use cached feature matrix
+        if (AlgorithmRecommender._feature_matrix_cache is not None and 
+            AlgorithmRecommender._scaler_cache is not None and
+            AlgorithmRecommender._cache_timestamp is not None):
+            
+            logger.info("✅ Using cached feature matrix")
+            self.feature_matrix = AlgorithmRecommender._feature_matrix_cache
+            self.scaler = AlgorithmRecommender._scaler_cache
             return
             
         try:
@@ -156,28 +207,38 @@ class AlgorithmRecommender:
                     
             # Create feature matrix efficiently using pd.concat
             feature_data = {col: [0] * len(self.df) for col in feature_columns}
-            self.feature_matrix = pd.DataFrame(feature_data, index=self.df.index)
+            feature_matrix = pd.DataFrame(feature_data, index=self.df.index)
                 
             # Fill feature matrix
             for idx, row in self.df.iterrows():
                 for col in ['Öğrenme Türü', 'Kullanım Alanı', 'Karmaşıklık Düzeyi', 'Veri Tipi', 'Veri Büyüklüğü ', 'Popülerlik']:
                     if col in self.df.columns:
                         feature_col = f"{col}_{row[col]}"
-                        if feature_col in self.feature_matrix.columns:
-                            self.feature_matrix.loc[idx, feature_col] = 1
+                        if feature_col in feature_matrix.columns:
+                            feature_matrix.loc[idx, feature_col] = 1
                             
             # Normalize features
-            if not self.feature_matrix.empty:
-                self.feature_matrix = pd.DataFrame(
-                    self.scaler.fit_transform(self.feature_matrix),
-                    columns=self.feature_matrix.columns,
-                    index=self.feature_matrix.index
+            scaler = StandardScaler()
+            if not feature_matrix.empty:
+                feature_matrix = pd.DataFrame(
+                    scaler.fit_transform(feature_matrix),
+                    columns=feature_matrix.columns,
+                    index=feature_matrix.index
                 )
-                
-            logger.info(f"✅ Feature preprocessing completed: {self.feature_matrix.shape}")
+            
+            # Cache the results
+            AlgorithmRecommender._feature_matrix_cache = feature_matrix
+            AlgorithmRecommender._scaler_cache = scaler
+            
+            self.feature_matrix = feature_matrix
+            self.scaler = scaler
+            
+            logger.info(f"✅ Feature preprocessing completed and cached: {self.feature_matrix.shape}")
             
         except Exception as e:
             logger.error(f"❌ Error in feature preprocessing: {str(e)}")
+            self.feature_matrix = None
+            self.scaler = None
     
     def get_recommendations(self, 
                           project_type: str = None,
