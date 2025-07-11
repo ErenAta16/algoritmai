@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request, BackgroundTasks
+from fastapi import FastAPI, HTTPException, Request, BackgroundTasks, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
@@ -9,6 +9,7 @@ import time
 import logging
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+from sqlalchemy.orm import Session
 from services.enhanced_openai_service import enhanced_openai_service
 from services.memory_monitor import memory_monitor, monitor_memory
 from services.error_handler import error_handler, handle_errors, ErrorSeverity, ErrorCategory
@@ -16,6 +17,7 @@ from services.monitoring_service import monitoring_service, monitor_api_call
 from services.cache_optimizer import cache_optimizer, query_optimizer
 from services.load_balancer import load_balancer, load_balanced, RequestPriority
 from services.health_monitor import health_monitor
+from services.auth_service import auth_service, UserCreate, UserLogin, UserUpdate, UserResponse, TokenResponse, UserRole
 import re
 import html
 from collections import defaultdict
@@ -460,12 +462,269 @@ async def recommend_algorithms(
         logger.error(f"❌ Recommendation error: {str(e)}")
         raise HTTPException(status_code=500, detail="Recommendation service temporarily unavailable")
 
+# ============================================================================
+# AUTHENTICATION ENDPOINTS
+# ============================================================================
+
+@app.post("/auth/register", response_model=TokenResponse)
+async def register_user(user_data: UserCreate, db: Session = Depends(auth_service.get_db)):
+    """
+    Register a new user account
+    """
+    try:
+        # Create user
+        user = auth_service.create_user(
+            db=db,
+            username=user_data.username,
+            email=user_data.email,
+            password=user_data.password,
+            full_name=user_data.full_name
+        )
+        
+        # Login user immediately after registration
+        token_response = auth_service.login(db, user_data.username, user_data.password)
+        
+        logger.info(f"✅ New user registered: {user.username}")
+        
+        return token_response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Registration error: {str(e)}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail="Registration failed")
+
+@app.post("/auth/login", response_model=TokenResponse)
+async def login_user(login_data: UserLogin, db: Session = Depends(auth_service.get_db)):
+    """
+    Login user and return access token
+    """
+    try:
+        token_response = auth_service.login(db, login_data.username, login_data.password)
+        
+        logger.info(f"✅ User logged in: {login_data.username}")
+        
+        return token_response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Login error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Login failed")
+
+from pydantic import BaseModel
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+@app.post("/auth/refresh", response_model=TokenResponse)
+async def refresh_access_token(request: RefreshTokenRequest, db: Session = Depends(auth_service.get_db)):
+    """
+    Refresh access token using refresh token
+    """
+    try:
+        token_response = auth_service.refresh_token(db, request.refresh_token)
+        
+        logger.info("✅ Access token refreshed")
+        
+        return token_response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Token refresh error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Token refresh failed")
+
+@app.post("/auth/logout")
+async def logout_user(
+    current_user: UserResponse = Depends(auth_service.get_current_user_dependency())
+):
+    """
+    Logout user and invalidate refresh token
+    """
+    try:
+        success = auth_service.logout(current_user.id)
+        if success:
+            logger.info(f"✅ User logged out: {current_user.username}")
+            return {"message": "Successfully logged out"}
+        else:
+            return {"message": "Already logged out"}
+    except Exception as e:
+        logger.error(f"❌ Logout error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Logout failed")
+
+@app.get("/auth/me", response_model=UserResponse)
+async def get_current_user_info(
+    current_user: UserResponse = Depends(auth_service.get_current_user_dependency())
+):
+    """
+    Get current user information
+    """
+    return current_user
+
+@app.put("/auth/me", response_model=UserResponse)
+async def update_user_info(
+    update_data: UserUpdate,
+    db: Session = Depends(auth_service.get_db),
+    current_user: UserResponse = Depends(auth_service.get_current_user_dependency())
+):
+    """
+    Update current user information
+    """
+    try:
+        updated_user = auth_service.update_user(db, current_user.id, update_data)
+        logger.info(f"✅ User updated: {current_user.username}")
+        return updated_user
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ User update error: {str(e)}")
+        raise HTTPException(status_code=500, detail="User update failed")
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+@app.post("/auth/change-password")
+async def change_password(
+    request: ChangePasswordRequest,
+    db: Session = Depends(auth_service.get_db),
+    current_user: UserResponse = Depends(auth_service.get_current_user_dependency())
+):
+    """
+    Change user password
+    """
+    try:
+        success = auth_service.change_password(db, current_user.id, request.current_password, request.new_password)
+        if success:
+            logger.info(f"✅ Password changed for user: {current_user.username}")
+            return {"message": "Password changed successfully"}
+        else:
+            raise HTTPException(status_code=400, detail="Password change failed")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Password change error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Password change failed")
+
+@app.delete("/auth/me")
+async def delete_user_account(
+    db: Session = Depends(auth_service.get_db),
+    current_user: UserResponse = Depends(auth_service.get_current_user_dependency())
+):
+    """
+    Delete current user account
+    """
+    try:
+        success = auth_service.delete_user(db, current_user.id)
+        if success:
+            logger.info(f"✅ User account deleted: {current_user.username}")
+            return {"message": "Account deleted successfully"}
+        else:
+            raise HTTPException(status_code=400, detail="Account deletion failed")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Account deletion error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Account deletion failed")
+
+# Admin endpoints
+@app.get("/auth/users", response_model=List[UserResponse])
+async def get_all_users(
+    db: Session = Depends(auth_service.get_db),
+    current_user: UserResponse = Depends(auth_service.require_role([UserRole.ADMIN, UserRole.MODERATOR]))
+):
+    """
+    Get all users (admin/moderator only)
+    """
+    try:
+        users = auth_service.get_all_users(db, current_user)
+        return users
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Get users error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get users")
+
+@app.get("/auth/stats")
+async def get_auth_stats(
+    db: Session = Depends(auth_service.get_db),
+    current_user: UserResponse = Depends(auth_service.require_role([UserRole.ADMIN]))
+):
+    """
+    Get authentication statistics (admin only)
+    """
+    try:
+        stats = auth_service.get_auth_stats(db)
+        return stats
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Auth stats error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get auth stats")
+
+# ============================================================================
+# PROTECTED ENDPOINTS (Require Authentication)
+# ============================================================================
+
+@app.post("/chat/protected", response_model=ChatResponse)
+async def protected_chat_endpoint(
+    message: ChatMessage, 
+    background_tasks: BackgroundTasks, 
+    request: Request,
+    current_user: UserResponse = Depends(auth_service.get_current_user_dependency())
+):
+    """
+    Protected chat endpoint that requires authentication
+    """
+    # Add user context to message
+    message.user_id = current_user.id
+    
+    # Call the original chat endpoint logic
+    return await chat_endpoint(message, background_tasks, request)
+
+@app.post("/recommend/protected")
+async def protected_recommend_algorithms(
+    project_type: str = "classification",
+    data_size: str = "medium",
+    data_type: str = "numerical",
+    complexity: str = "medium",
+    current_user: UserResponse = Depends(auth_service.get_current_user_dependency())
+):
+    """
+    Protected algorithm recommendation endpoint
+    """
+    try:
+        recommendations = openai_service.algorithm_recommender.get_recommendations(
+            project_type=project_type,
+            data_size=data_size,
+            data_type=data_type,
+            complexity_preference=complexity
+        )
+        
+        return {
+            "recommendations": recommendations,
+            "timestamp": datetime.now(),
+            "user_id": current_user.id,
+            "parameters": {
+                "project_type": project_type,
+                "data_size": data_size,
+                "data_type": data_type,
+                "complexity": complexity
+            }
+        }
+    except Exception as e:
+        logger.error(f"❌ Protected recommendation error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Recommendation service temporarily unavailable")
+
 if __name__ == "__main__":
     import uvicorn
+    port = int(os.getenv("PORT", "5001"))
     uvicorn.run(
         app, 
         host="0.0.0.0", 
-        port=5000,
+        port=port,
         log_level="info",
         access_log=True
     ) 

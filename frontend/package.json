@@ -1,13 +1,13 @@
 {
-  "name": "ai-algorithm-consultant-frontend",
+  "name": "frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "@types/axios": "^0.9.36",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.126",
     "@types/react": "^19.1.8",
